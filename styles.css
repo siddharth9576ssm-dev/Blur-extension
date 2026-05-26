@@ -1,0 +1,77 @@
+/* AuraBlur Base Page-Injected Stylesheet */
+
+:root {
+    /* Fallback variables (updated in real time by content.js via injected root variables) */
+    --aura-blur-amount: 10px;
+    --aura-bg-color: rgba(255, 255, 255, 0.20);
+    --aura-privacy-blur: 20px;
+    --aura-transition-speed: 0.3s;
+}
+
+/* 1. Dynamic Glassmorphic Active Class (Applied to light-colored blocks) */
+.aura-blur-active {
+    background-color: var(--aura-bg-color) !important;
+    backdrop-filter: blur(var(--aura-blur-amount)) !important;
+    -webkit-backdrop-filter: blur(var(--aura-blur-amount)) !important;
+    transition: background-color var(--aura-transition-speed) ease, 
+                backdrop-filter var(--aura-transition-speed) ease,
+                -webkit-backdrop-filter var(--aura-transition-speed) ease !important;
+}
+
+/* 2. Privacy Mode Classes */
+
+/* Privacy filter for Media (Images, Videos, Iframes, Canvas, SVGs) */
+.aura-privacy-media {
+    filter: blur(var(--aura-privacy-blur)) !important;
+    transition: filter var(--aura-transition-speed) cubic-bezier(0.4, 0, 0.2, 1) !important;
+    will-change: filter;
+}
+
+/* Privacy filter for Input & Form fields */
+.aura-privacy-input {
+    filter: blur(8px) !important;
+    transition: filter var(--aura-transition-speed) cubic-bezier(0.4, 0, 0.2, 1) !important;
+    will-change: filter;
+}
+
+/* Privacy filter for General Reading Text */
+.aura-privacy-text {
+    filter: blur(8px) !important;
+    transition: filter var(--aura-transition-speed) cubic-bezier(0.4, 0, 0.2, 1) !important;
+    will-change: filter;
+}
+
+/* Privacy filter for Credentials & Sensitive Data (glowing pink glass highlights) */
+.aura-privacy-credential {
+    filter: blur(8px) !important;
+    background-color: rgba(255, 51, 102, 0.15) !important;
+    border-radius: 4px;
+    padding: 0 4px;
+    transition: filter var(--aura-transition-speed) cubic-bezier(0.4, 0, 0.2, 1),
+                background-color var(--aura-transition-speed) ease !important;
+    will-change: filter;
+    display: inline-block;
+}
+
+/* 3. Hover to Reveal Mechanism */
+
+/* Hover state that instantly reveals media smoothly */
+.aura-hover-reveal.aura-privacy-media:hover {
+    filter: blur(0px) !important;
+}
+
+/* Hover state that instantly reveals input fields */
+.aura-hover-reveal.aura-privacy-input:hover {
+    filter: blur(0px) !important;
+}
+
+/* Hover state that instantly reveals reading text */
+.aura-hover-reveal.aura-privacy-text:hover {
+    filter: blur(0px) !important;
+}
+
+/* Hover state that instantly reveals credentials */
+.aura-hover-reveal.aura-privacy-credential:hover {
+    filter: blur(0px) !important;
+    background-color: transparent !important;
+}

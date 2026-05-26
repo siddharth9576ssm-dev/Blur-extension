@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "AuraBlur: Glassmorphic & Privacy Shield",
+  "version": "1.2",
+  "description": "Premium dynamic glassmorphism and sensitive content privacy shield for your browser.",
+  "permissions": ["storage", "activeTab"],
+  "icons": {
+    "16": "icon-16.png",
+    "32": "icon-32.png",
+    "48": "icon-48.png",
+    "128": "icon-128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon-16.png",
+      "32": "icon-32.png",
+      "48": "icon-48.png",
+      "128": "icon-128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ]
+}

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AuraBlur Control Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #8a2be2;
+      --primary-glow: rgba(138, 43, 226, 0.4);
+      --accent: #00f2fe;
+      --accent-glow: rgba(0, 242, 254, 0.4);
+      --bg-dark: #07040e;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --border-light: rgba(255, 255, 255, 0.08);
+      --text-main: #ffffff;
+      --text-muted: #a09eb0;
+      --font-family: 'Outfit', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: linear-gradient(135deg, #0b071e 0%, #030107 100%);
+      color: var(--text-main);
+      width: 350px;
+      padding: 16px;
+      overflow-x: hidden;
+    }
+
+    /* Main Container with Glassmorphism */
+    .container {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-light);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+      position: relative;
+    }
+
+    /* Header styling with gradient title */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 28px;
+      height: 28px;
+    }
+
+    h1 {
+      font-size: 20px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #b67cff 0%, #00f2fe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.5px;
+    }
+
+    .subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 300;
+      margin-top: 1px;
+    }
+
+    /* Master Activation Switch */
+    .master-switch-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(138, 43, 226, 0.08);
+      border: 1px solid rgba(138, 43, 226, 0.2);
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: inset 0 0 10px rgba(138, 43, 226, 0.05);
+    }
+
+    .master-label {
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Sliding Toggles */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 22px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.1);
+      transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #ffffff;
+      transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    input:checked + .slider {
+      background: linear-gradient(90deg, var(--primary) 0%, #5d1bb5 100%);
+      border-color: rgba(138, 43, 226, 0.3);
+      box-shadow: 0 0 8px var(--primary-glow);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+
+    /* Section Headers */
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-title::after {
+      content: "";
+      flex-grow: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* Preset Cards Grid */
+    .presets-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .preset-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      padding: 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .preset-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .preset-card.active {
+      background: rgba(0, 242, 254, 0.05);
+      border-color: var(--accent);
+      box-shadow: 0 0 8px var(--accent-glow);
+    }
+
+    .preset-emoji {
+      font-size: 16px;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .preset-name {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .preset-desc {
+      font-size: 9px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Sliders styling */
+    .control-group {
+      margin-bottom: 14px;
+    }
+
+    .control-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .control-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .control-value {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(0, 242, 254, 0.1);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    /* Range input customization */
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      background: transparent;
+      margin: 8px 0;
+    }
+
+    input[type=range]:focus {
+      outline: none;
+    }
+
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 5px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 3px;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      height: 14px;
+      width: 14px;
+      border-radius: 50%;
+      background: #ffffff;
+      cursor: pointer;
+      -webkit-appearance: none;
+      margin-top: -5px;
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 8px var(--accent-glow);
+      transition: transform 0.1s ease;
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.25);
+    }
+
+    /* Toggle row features */
+    .feature-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .feature-row:last-child {
+      border-bottom: none;
+    }
+
+    .feature-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .feature-title {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .feature-desc {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    /* Footer Whitelist Active Domain bar */
+    .domain-container {
+      margin-top: 20px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-light);
+      padding: 10px 12px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .domain-info {
+      display: flex;
+      flex-direction: column;
+      max-width: 180px;
+    }
+
+    .domain-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .domain-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #ffffff;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      margin-top: 1px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="64" cy="64" r="54" stroke="url(#h-neon)" stroke-width="6" opacity="0.8" />
+          <circle cx="64" cy="64" r="46" fill="url(#h-neon)" />
+          <circle cx="80" cy="80" r="34" fill="rgba(255, 255, 255, 0.25)" stroke="rgba(255, 255, 255, 0.4)" stroke-width="1.5" />
+          <path d="M40 64 C 52 50, 76 50, 88 64 C 76 78, 52 78, 40 64 Z" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+          <circle cx="64" cy="64" r="6" fill="#ffffff" />
+          <defs>
+            <linearGradient id="h-neon" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#8a2be2" />
+              <stop offset="100%" stop-color="#00f2fe" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div>
+          <h1>AuraBlur</h1>
+          <div class="subtitle">Glassmorphism & Privacy Shield</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Master Switch -->
+    <div class="master-switch-container">
+      <span class="master-label" id="masterLabel">Aura Protection</span>
+      <label class="switch">
+        <input type="checkbox" id="masterToggle" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- Presets Section -->
+    <div class="section-title">Visual Presets</div>
+    <div class="presets-grid">
+      <div class="preset-card" id="presetFrosted">
+        <span class="preset-emoji">❄️</span>
+        <span class="preset-name">Frosted</span>
+        <div class="preset-desc">Clean glass</div>
+      </div>
+      <div class="preset-card" id="presetMidnight">
+        <span class="preset-emoji">🌙</span>
+        <span class="preset-name">Midnight</span>
+        <div class="preset-desc">Obsidian blur</div>
+      </div>
+      <div class="preset-card" id="presetCyber">
+        <span class="preset-emoji">🌌</span>
+        <span class="preset-name">Cyber Neon</span>
+        <div class="preset-desc">Hyper glow</div>
+      </div>
+      <div class="preset-card" id="presetPrivacy">
+        <span class="preset-emoji">🛡️</span>
+        <span class="preset-name">Privacy</span>
+        <div class="preset-desc">Cover & Hover</div>
+      </div>
+    </div>
+
+    <!-- Sliders section -->
+    <div class="section-title">Aura Customizer</div>
+    
+    <div class="control-group">
+      <div class="control-header">
+        <span class="control-label">Blur Radius</span>
+        <span class="control-value" id="blurVal">10px</span>
+      </div>
+      <input type="range" id="blurSlider" min="0" max="30" value="10">
+    </div>
+
+    <div class="control-group">
+      <div class="control-header">
+        <span class="control-label">Backdrop Opacity</span>
+        <span class="control-value" id="opacityVal">20%</span>
+      </div>
+      <input type="range" id="opacitySlider" min="0" max="100" value="20">
+    </div>
+
+    <div class="control-group">
+      <div class="control-header">
+        <span class="control-label">White Detection Sens.</span>
+        <span class="control-value" id="sensitivityVal">200</span>
+      </div>
+      <input type="range" id="sensitivitySlider" min="150" max="255" value="200">
+    </div>
+
+    <!-- Privacy features toggles -->
+    <div class="section-title">Privacy Guard</div>
+    
+    <div class="feature-row">
+      <div class="feature-info">
+        <span class="feature-title">Blur Images & Videos</span>
+        <span class="feature-desc">Mask media until hovered</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="blurMediaToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="feature-row">
+      <div class="feature-info">
+        <span class="feature-title">Blur Input Fields</span>
+        <span class="feature-desc">Hide typed form details</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="blurInputsToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="feature-row">
+      <div class="feature-info">
+        <span class="feature-title">Blur Reading Text</span>
+        <span class="feature-desc">Mask paragraphs & headers</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="blurTextToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="feature-row">
+      <div class="feature-info">
+        <span class="feature-title">Blur Sensitive Credentials</span>
+        <span class="feature-desc">Mask emails, phone numbers & balances</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="blurCredentialsToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="feature-row">
+      <div class="feature-info">
+        <span class="feature-title">Hover to Reveal</span>
+        <span class="feature-desc">Temporarily unblur on hover</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="hoverRevealToggle" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- Whitelisting by site -->
+    <div class="domain-container">
+      <div class="domain-info">
+        <span class="domain-label">Active Site</span>
+        <span class="domain-name" id="domainDisplay">detecting...</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="domainToggle" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
